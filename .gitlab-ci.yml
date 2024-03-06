@@ -1,0 +1,98 @@
+cache:
+  key: "${CI_PROJECT_NAMESPACE_ID}"
+  paths:
+    - node_modules/
+    - yarn_cache/
+
+stages:
+  - build
+  - on_staging
+  - build_for_production
+  - on_production
+
+staging_build:
+  image: node:18
+  stage: build
+  script:
+    - yarn --prefer-offline --no-progress --non-interactive --frozen-lockfile --cache-folder ./yarn_cache
+    
+    - cp ${STAGING_BUILD} .env
+    - yarn run build
+  artifacts:
+    name: "${CI_COMMIT_SHORT_SHA}_staging"
+    expire_in: 2 hour
+    paths:
+      - dist
+  only: 
+    - /^release-v[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/
+    - tags
+
+staging_deploy:
+  image: registry.gitlab.com/ads-plus-frontend/guru-booking:latest
+  stage: on_staging
+  script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "${STAGING_SSH_PRIVATE_KEY}" | base64 -d | tr -d '\r')
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    
+    - chmod 755 dist
+    - zip -r "${CI_COMMIT_SHORT_SHA}.zip" dist
+
+    - cp ${STAGING_CICD} .env
+    - set -a; source .env; set +a
+    - ssh "${CICD_USERNAME}@${CICD_HOST}" "mkdir -p ${CICD_APP_DIR}/tmp"
+    - scp "${CI_COMMIT_SHORT_SHA}.zip" "${CICD_USERNAME}@${CICD_HOST}":"${CICD_APP_DIR}/tmp"
+
+    - echo "CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA}" >> .env
+    - ~/.composer/vendor/bin/envoy run deploy
+  needs: 
+    - job: "staging_build"
+      artifacts: true
+  only: 
+    - /^release-v[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/
+    - tags
+
+production_build:
+  image: node:18
+  stage: build
+  script:
+    - yarn --prefer-offline --no-progress --non-interactive --frozen-lockfile --cache-folder ./yarn_cache
+    - cp ${PRODUCTION_BUILD} .env
+    - yarn run build
+  artifacts:
+    name: "${CI_COMMIT_SHORT_SHA}_production"
+    expire_in: 1 week
+    paths:
+      - dist
+  when: manual
+  only: 
+    - /^official-v[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/
+    - tags
+
+production_deploy:
+  image: registry.gitlab.com/ads-plus-frontend/guru-booking:latest
+  stage: on_production
+  script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "${PRODUCTION_SSH_PRIVATE_KEY}" | base64 -d | tr -d '\r')
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    
+    - chmod 755 dist
+    - zip -r "${CI_COMMIT_SHORT_SHA}.zip" dist
+    
+    - cp ${PRODUCTION_CICD} .env
+    - set -a; source .env; set +a
+    - ssh "${CICD_USERNAME}@${CICD_HOST}" "mkdir -p ${CICD_APP_DIR}/tmp"
+    - scp "${CI_COMMIT_SHORT_SHA}.zip" "${CICD_USERNAME}@${CICD_HOST}":"${CICD_APP_DIR}/tmp"
+
+    - echo "CI_COMMIT_SHORT_SHA=${CI_COMMIT_SHORT_SHA}" >> .env
+    - ~/.composer/vendor/bin/envoy run deploy
+  needs: 
+    - job: "production_build"
+      artifacts: true
+  when: manual
+  only: 
+    - /^official-v[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}$/
+    - tags

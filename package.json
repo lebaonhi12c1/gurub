@@ -1,0 +1,110 @@
+{
+  "version": "2.4.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --mode development",
+    "test": "vue-cli-service serve --mode testing",
+    "build": "vue-cli-service build --mode production",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
+    "@ckeditor/ckeditor5-vue": "^4.0.1",
+    "@fullcalendar/bootstrap": "^6.0.2",
+    "@fullcalendar/core": "^6.0.2",
+    "@fullcalendar/daygrid": "^6.0.2",
+    "@fullcalendar/interaction": "^6.0.2",
+    "@fullcalendar/list": "^6.0.2",
+    "@fullcalendar/timegrid": "^6.0.2",
+    "@fullcalendar/vue3": "^6.0.2",
+    "@j-t-mcc/vue3-chartjs": "^1.3.0",
+    "@noction/vue-bezier": "^1.0.5",
+    "@popperjs/core": "^2.11.6",
+    "@simonwep/pickr": "^1.8.2",
+    "@vue-leaflet/vue-leaflet": "^0.8.4",
+    "@vueform/multiselect": "^2.5.8",
+    "@vueform/slider": "^2.1.7",
+    "@vueform/toggle": "^2.1.3",
+    "@vuelidate/core": "^2.0.0",
+    "@vuelidate/validators": "^2.0.0",
+    "@vuepic/vue-datepicker": "^5.4.0",
+    "@zhuowenli/vue-feather-icons": "^5.0.2",
+    "aos": "^2.3.4",
+    "apexcharts": "^3.37.1",
+    "axios": "^1.3.4",
+    "bootstrap": "^5.2.3",
+    "bootstrap-vue-3": "^0.4.15",
+    "chart.js": "^3.7.0",
+    "click-outside-vue3": "^4.0.1",
+    "core-js": "^3.27.1",
+    "echarts": "^5.4.1",
+    "feather-icons": "^4.29.0",
+    "firebase": "^9.22.0",
+    "highlight.js": "^11.7.0",
+    "jquery": "^3.7.0",
+    "leaflet": "^1.9.3",
+    "lodash": "^4.17.21",
+    "lottie-web": "^5.10.1",
+    "maska": "^1.5.0",
+    "moment": "^2.29.4",
+    "prismjs": "^1.29.0",
+    "qs": "^6.11.2",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.0",
+    "simplebar": "^5.3.8",
+    "simplebar-vue3": "^0.1.8",
+    "sweetalert2": "^11.7.2",
+    "swiper": "^8.4.5",
+    "vue": "3.2.45",
+    "vue-draggable-next": "^2.1.1",
+    "vue-feather": "^2.0.0",
+    "vue-flatpickr-component": "^11.0.2",
+    "vue-i18n": "^9.2.2",
+    "vue-prismjs": "^1.2.0",
+    "vue-router": "4.1.6",
+    "vue3-apexcharts": "^1.4.1",
+    "vue3-count-to": "^1.1.2",
+    "vue3-echarts": "^1.1.0",
+    "vue3-google-map": "^0.15.0",
+    "vue3-toastify": "^0.1.12",
+    "vuevectormap": "^2.0.1",
+    "vuex": "^4.1.0",
+    "yarn": "^1.22.19"
+  },
+  "devDependencies": {
+    "@achrinza/node-ipc": "^10.1.7",
+    "@babel/eslint-parser": "^7.19.1",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
+    "@vue/compiler-sfc": "^3.2.45",
+    "eslint": "^8.31.0",
+    "eslint-plugin-vue": "^7.0.0"
+  },
+  "resolutions": {
+    "autoprefixer": "10.4.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "no-unused-vars": [
+        "warn",
+        {
+          "varsIgnorePattern": "gapi"
+        }
+      ]
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
